@@ -9,8 +9,8 @@ try {
 
 const API_KEY = process.env.API_KEY;
 const HOME = 'Vejenbrødvej 2b, 2980 Kokkedal';
-const CRON_MORNING = process.env.CRON_MORNING || '*/10 6-9 * * * *'
-const CRON_AFTERNOON = process.env.CRON_AFTERNOON || '*/10 14-18 * * * *'
+const CRON_MORNING = process.env.CRON_MORNING || '*/10 6-9 * * 1-5 *'
+const CRON_AFTERNOON = process.env.CRON_AFTERNOON || '*/10 14-18 * * 1-5 *'
 
 class Job {
   constructor(name, label, address1, address2) {
@@ -25,8 +25,8 @@ class Job {
     fetch(`https://maps.googleapis.com/maps/api/directions/json?mode=driving&departure_time=now&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&key=${API_KEY}`).then(resp => {
       return resp.json()
     }).then(payload => {
-      this.drivingTimeTraffic = payload.routes[0].legs[0].duration_in_traffic.text;
-      this.drivingTime = payload.routes[0].legs[0].duration.text;
+      this.drivingTimeTraffic = payload.routes[0].legs[0].duration_in_traffic.text.split(' ')[0];
+      this.drivingTime = payload.routes[0].legs[0].duration.text.split(' ')[0];
       console.log(`Retrieved driving time for <${this.label}> (from: ${origin}, to: ${destination}) - driving_time: <${this.drivingTime}>, driving_time_traffic: <${this.drivingTimeTraffic}>`)
     })
   }
