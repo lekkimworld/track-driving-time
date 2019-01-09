@@ -9,6 +9,7 @@ try {
 
 const API_KEY = process.env.API_KEY;
 const HOME = 'Vejenbrødvej 2b, 2980 Kokkedal';
+const TIMEZONE = process.env.TIMEZONE || 'Europe/Copenhagen';
 const CRON_MORNING = process.env.CRON_MORNING || '*/10 6-9 * * 1-5 *'
 const CRON_AFTERNOON = process.env.CRON_AFTERNOON || '*/10 14-18 * * 1-5 *'
 
@@ -38,10 +39,10 @@ const jobs = [
 jobs.forEach(j => {
   j.cronMorning = new CronJob(CRON_MORNING, function() {
     j.getDrivingTime(true);
-  });
+  }, null, true, TIMEZONE);
   j.cronAfternoon = new CronJob(CRON_AFTERNOON, function() {
     j.getDrivingTime(false);
-  });
+  }, null, true, TIMEZONE);
   j.cronMorning.start();
   j.cronAfternoon.start();
 })
