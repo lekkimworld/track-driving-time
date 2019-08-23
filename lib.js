@@ -55,7 +55,8 @@ module.exports = {
     },
     publishResult: (key, value) => {
         return new Promise((resolve, reject) =>{
-            client.set(key, value, 'EX', (process.env.REDIS_EXP_MINUTES || 15)*60, (err, replies) => {
+            let keyTimeout = (process.env.REDIS_EXP_MINUTES || 15) * 60;
+            client.setex(key, keyTimeout, value, (err, replies) => {
                 if (err) return reject(err);
                 return resolve();
             })
